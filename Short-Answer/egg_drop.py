@@ -12,8 +12,8 @@ def egg_drop(n):
     high = n -1
     low = 0
 
-    # Continue running until there are only two floors left
-    while high - low > 1:   # O(log n)
+    # Continue running until there are only one floor left
+    while high != low :   # O(log n)
 
         # Calculate the midpoint
         mid = (high - low)//2
@@ -32,19 +32,7 @@ def egg_drop(n):
             # Keep the lowest floor it cracks on, that could be f
             high = mid
     
-    # After it has been narrowed down to two floors to drop from 
-    
-    # Drop the egg from the lower floor
-    egg.drop(low)
-
-    # If it cracks, that is f
-    if egg.crack() == True:
-        f = low
-        return f
-
-    # If it doesn't crack, it was the floor above it that is f
-    if egg.crack() == False:
-        f = high
-        return f
+    # With one floor left, we know that is f, return f
+    return high
 
 
