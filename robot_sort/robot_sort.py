@@ -1,3 +1,13 @@
+'''
+Understand:
+    Use the pre-defined methods and robot class
+    Finish the sort method using the pre-defined methods
+        Return a sorted list in ascending order
+    Can not save any variables or call attribute directly, just use method calls
+    Can create helper methods if needed, as long as they follow the rules
+'''
+
+
 class SortingRobot:
     def __init__(self, l):
         """
@@ -92,12 +102,89 @@ class SortingRobot:
         """
         return self._light == "ON"
 
+    '''
+    Plan:
+        Utilize the logic of bubble sort
+        Start at the front, have the robot pick up the first item
+            Move to the next item
+            Compare the item in his hand to the item in front of him
+            If it is greater than what he's holding, pick it up. Put the one he's holding down. 
+            Continue down the line until he reaches the end.
+
+        Use the light to indicate when the list has been completely sorted, turn the light on when swaps occur
+
+        Stop the sorting when the robot reaches the end of the list and his light hasn't been turned on (no swaps have occured)
+
+        ** To cut time in half, have the robot sort as he traverses back down the list moving left
+
+        ** Picking up an item leaves a blank spot. As the list gets sorted from the front, the blank spot gets
+        moved up. Creating a boundary, everything to the left of the blank spot has been sorted.
+            Use that logic to stop the robot from having to traverse all the way back to the front everytime
+    '''
+
     def sort(self):
         """
         Sort the robot's list.
         """
-        # Fill this out
-        pass
+        # Base Case
+        # If the robot has reached the end of the list and his light is off (no swaps have occurred),
+        if self.can_move_right() == False and self.light_is_on() == False:
+            return
+
+        # Grab the first card
+        self.swap_item()
+
+        # While the robot is still able to move right,
+        while self.can_move_right():
+
+            # Move right
+            self.move_right()
+
+            # Compare the item in his hand to that in front of him
+            # If the item in front of him is greater than what he is holding (-1), swap items
+            if self.compare_item() == -1:
+                # Swap the item
+                self.swap_item()
+                # Turn his light on to indicate that a swap has occured
+                self.set_light_on()
+            
+        # Once the robot can no longer move right, he is at the end of the list and holding the largest value
+        # Swap items
+        self.swap_item()
+
+        # Now the robot needs to traverse back to index 0, grabbing the smallest value as he goes
+            # Follow the same logic as when he moved right with the largest value
+
+        # If he hits a empty slot in the list, everything in front of it has been sorted
+        # He doesn't need to sort anymore, he is holding the smallest value left to be sorted. 
+        # Put it in the blank spot and turn to move back in the other direction
+
+        while self.compare_item() is not None:
+
+            # Move left
+            self.move_left()
+
+            # Compare the item in his hand to that in front of him
+            # If the item in front of him is less than what he is holding (1), swap items
+            if self.compare_item() == 1:
+                # Swap the item
+                self.swap_item()
+                # Turn his light on to indicate that a swap has occured
+                self.set_light_on()
+            
+        # Once self.compare_item() is None, that means he is in front of a blank space
+            #  - everything to the left of the blank space has already been sorted
+        # Deposit what he is holding
+        self.swap_item()
+
+        # Reset the light to the off position
+        self.set_light_off()
+
+        # Move one spot over to the right
+        self.move_right()
+
+        # Re-run the process all over again
+        self.sort()        
 
 
 if __name__ == "__main__":
